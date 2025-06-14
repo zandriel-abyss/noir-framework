@@ -1,119 +1,152 @@
-# Noir-Framework
+# Noir Framework – Blockchain Fraud Detection
 
-A modular, Python-based framework for collecting, processing, and analyzing blockchain transaction data to support fraud detection and Anti-Money Laundering (AML) research. The project focuses on the Ethereum mainnet and Layer-2 ecosystems, creating a dataset that distinguishes between fraudulent activities and legitimate privacy-preserving behaviors.
+## Overview
 
----
+Noir is a modular machine learning framework designed for detecting fraud and enabling AML compliance in Ethereum-based blockchain ecosystems. It combines behavioral feature engineering, supervised and unsupervised modeling, and explainability layers to identify suspicious wallet activity.
 
-## 🪄 What’s This Project?
+## Objectives
 
-The **Noir-Framework** is designed to:
+- Detect anomalous and fraudulent wallet behavior
+- Distinguish malicious activity from privacy-preserving use cases (e.g., mixers)
+- Enable real-time risk scoring and compliance integration
+- Provide explainable outputs for regulatory traceability
 
-✅ **Collect blockchain data**: Fetch Ethereum addresses and transaction histories for known fraudulent addresses (OFAC, North Korean hacker groups) and “normal” high-volume addresses (rich list).  
-✅ **Feature engineering**: Generate wallet-level behavioral features that capture suspicious patterns (like dormant reawakening, circular fund flows, cross-chain hops).  
-✅ **Model building**: Lay the foundation for a hybrid machine learning pipeline that combines anomaly detection and supervised classification.  
-✅ **Explainability & Evaluation**: Integrate explainable AI (XAI) techniques (e.g., SHAP) and causal reasoning modules to produce transparent, regulator-friendly outputs.
+## Architecture Modules
 
-This framework is a **data and feature engineering pipeline** feeding into the broader thesis research on **modular blockchain fraud detection and compliance analytics**.
+1. **Data Collection**\
+   Scripts to collect:
 
----
+   - Fraudulent addresses (OFAC sanctions, hacker lists)
+   - Mixer-linked addresses (e.g., Tornado Cash)
+   - Normal wallets (ETH richlist)
+   - Transaction logs from Etherscan APIs
 
-## 🗂️ Directory Structure
+2. **Wallet Feature Engineering**
+
+   - Aggregate transaction data to compute:
+     - Total tx count, volume
+     - Activity span
+     - Dormancy and awakenings
+     - Counterparty uniqueness
+     - Circular tx heuristics
+   - Label wallets as `fraud`, `normal`, or `suspicious`
+
+3. **Modeling & Detection Engine**
+
+   - Unsupervised: Isolation Forest, DBSCAN
+   - Supervised: Random Forest, XGBoost
+   - Label prediction: 0 (normal), 1 (fraud), 2 (suspicious)
+   - Live-testing support with temporal validation splits
+
+4. **Explainability & Risk Tagging**
+
+   - SHAP values for global/local importance
+   - Rule-based tagging (e.g., dormant big tx, rapid fund movement)
+   - Visual anomaly score distributions
+
+5. **Evaluation & Reporting**
+
+   - Confusion matrix, precision-recall, F1
+   - Feature importances
+   - Distribution drift analysis over time
+
+6. **Live Test Hooks** (Planned)
+
+   - Forward-inference on new wallet samples
+   - Sandbox testing with simulated transactions
+
+## Repository Structure
+
+```
 noir-framework/
-├── datasource/
-│   ├── raw/                  # Raw input data (wallet addresses, scraped lists)
-│   │   ├── ofac-eth-addresses.txt
-│   │   ├── nk-hackers.txt
-│   │   └── etherscan_richlist.txt
-│   └── processed/            # Processed transaction CSVs
-│       ├── fraud_transactions.csv
-│       └── normal_transactions.csv
-├── scripts/                  # Python scripts for data collection
-│   ├── fetch_richlist.py
-│   ├── fetch_fraud_transactions.py
-│   └── fetch_normal_transactions.py
-├── notebooks/                # Jupyter notebooks for exploratory analysis
-│   └── exploratory.ipynb
-├── .env                      # Environment variables (API keys)
-├── requirements.txt          # Python dependencies
-└── README.md                 # This file!
+|│
+|├── datasource/
+|│   ├── raw/              ← ofac, hackers, richlist, mixers, etc.
+|│   └── processed/         ← cleaned and feature datasets
+|
+|├── scripts/
+|│   ├── fetch/            ← data_fetch_*.py
+|│   └── process/          ← wallet_features.py, label_wallets.py
+|
+|├── models/              ← train_model.py, shap_analysis.py
+|├── notebooks/           ← exploratory analysis notebooks
+|├── docs/                ← README.md (this file)
+|├── requirements.txt
+|└── .gitignore
+```
 
----
+## Setup Instructions
 
-## ⚙️ How It Works
+```bash
+# Clone the repository
+git clone https://github.com/zandriel-abyss/noir-framework.git
+cd noir-framework
 
-1. **Fetch Ethereum Rich List**  
-   - Script: `scripts/fetch_richlist.py`  
-   - Scrapes top 1,000 Ethereum wallet addresses from Etherscan.
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+# .venv\Scripts\activate    # Windows
 
-2. **Fetch Fraudulent Transactions**  
-   - Script: `scripts/fetch_fraud_transactions.py`  
-   - Loads OFAC and North Korean hacker addresses from `datasource/raw/`, then fetches transaction histories via the Etherscan API.
+# Install dependencies
+pip install -r requirements.txt
 
-3. **Fetch Normal Transactions**  
-   - Script: `scripts/fetch_normal_transactions.py`  
-   - Loads rich-list addresses (excluding flagged ones) and fetches transaction data for the top N normal wallets.
-
-4. **Process & Save Data**  
-   - All transactions are saved in CSV files (`datasource/processed/`) for downstream ML and analysis.
-
----
-
-## 🔧 Setup & Installation
-
-1. **Clone the repository**  
-   ```bash
-   git clone https://github.com/your-username/noir-framework.git
-   cd noir-framework
-
-2.	**Create and activate a Python virtual environment**
-    python3 -m venv .venv
-    source .venv/bin/activate  # macOS/Linux
-    .venv\Scripts\activate     # Windows
-
-3. **Install Python dependencies**
-    pip install -r requirements.txt
-
-4.	**Set environment variables**
-    Create a .env file in the project root:
-    ETHERSCAN_API_KEY=your_etherscan_api_key
-    CHROMEDRIVER_PATH=/path/to/chromedriver  # if not on PATH
-
-## 🔎 Data Sources & Context
-	•	OFAC Ethereum Addresses – Sanctioned addresses flagged by the US Treasury.
-	•	North Korean Hacker Addresses – Public lists of North Korean cybercrime groups (e.g., Lazarus Group).
-	•	Ethereum Rich List – Top 1,000 ETH addresses, typically whales or institutional players.
-	•	Etherscan API – Used to pull complete transaction histories.
+# Add your API key in a .env file
+ETHERSCAN_API_KEY=your_etherscan_api_key
+```
 
 ## Usage Examples
-    1.  Scrape Rich List
-        python scripts/fetch_richlist.py
-    2. Fetch Fraud Transactions
-        python scripts/fetch_fraud_transactions.py
-    3. Fetch Normal Transactions
-        python scripts/fetch_normal_transactions.py
 
-    Output CSVs will be saved in datasource/processed/.
+```bash
+# 1. Fetch Ethereum Rich List
+python scripts/fetch/fetch_richlist.py
 
-🔬 Next Steps & Roadmap
-	•	Build feature engineering pipeline (dormant periods, circular flows, etc.).
-	•	Develop and evaluate ML models (hybrid unsupervised + supervised approach).
-	•	Integrate SHAP-based explainability and reason codes.
-	•	Extend to real-time Layer-2 data streams via The Graph or Dune APIs.
-	•	Package as a modular, research-grade fraud detection tool.
+# 2. Fetch Fraudulent Transactions
+python scripts/fetch/fetch_fraud_transactions.py
 
-⸻
+# 3. Fetch Normal Transactions
+python scripts/fetch/fetch_normal_transactions.py
 
-📚 References
-	•	Taher, S. S., et al. (2024). Advanced Fraud Detection in Blockchain Transactions. DOI
-	•	Farrugia, S., et al. (2020). Detection of Illicit Accounts over Ethereum. DOI
-	•	Ralli, R., et al. (2024). Ensemble Fraud Detection. DOI
-	•	Chen, B., et al. (2021). Bitcoin Theft Detection. DOI
-	•	Zhang, S., et al. (2023). Dynamic Feature Fusion. arXiv
-	•	Song, K., et al. (2024). Money Laundering Subgraphs. DOI
-	•	Weber, M., et al. (2019). AML via Graph Convolutions. arXiv
-	•	Lin, D., et al. (2023). Cross-chain Tracking. DOI
-	•	BIS (2023). Project Aurora & Hertha. Link
-	•	KPMG & Chainalysis (2023). AML Partnership. Link
-	•	Daian, P., et al. (2020). Flash Boys 2.0. DOI
-	•	Qin, K., et al. (2022). Blockchain Extractable Value. DOI
-	•	Chainalysis (2024). Lazarus Group Laundering Routes. Link
+# 4. Fetch Mixer Transactions
+python scripts/fetch/data_fetch_mixers.py
+```
+
+CSV outputs are saved under `datasource/processed/`.
+
+## Data Sources & Context
+
+- **OFAC Ethereum Addresses** – Sanctioned addresses flagged by the US Treasury.
+- **North Korean Hacker Addresses** – Public lists of cybercrime-linked wallets.
+- **Ethereum Rich List** – Top 1,000 ETH holders from Etherscan.
+- **Mixer Addresses** – Wallets linked to Tornado Cash mixers.
+- **Etherscan API** – Primary data collection source for historical and live tx.
+
+## Roadmap
+
+- ✅ Finalize unified labeled dataset (fraud, normal, suspicious)
+- 🔄 Implement wallet feature engineering script
+- 🔄 Train hybrid ML pipeline (unsupervised + supervised)
+- 🔄 Add SHAP-based explainability layer
+- 🔄 Test on Layer-2 data via The Graph or Flipside
+- 🔄 Simulate real-time wallet scoring + alert hooks
+
+## References
+
+- Taher, S. S., et al. (2024). Advanced Fraud Detection in Blockchain Transactions.
+- Farrugia, S., et al. (2020). Detection of Illicit Accounts over Ethereum.
+- Ralli, R., et al. (2024). Ensemble Fraud Detection.
+- Chen, B., et al. (2021). Bitcoin Theft Detection.
+- Zhang, S., et al. (2023). Dynamic Feature Fusion.
+- Song, K., et al. (2024). Money Laundering Subgraphs.
+- Weber, M., et al. (2019). AML via Graph Convolutions.
+- Lin, D., et al. (2023). Cross-chain Tracking.
+- BIS (2023). Project Aurora & Hertha.
+- KPMG & Chainalysis (2023). AML Partnership.
+- Daian, P., et al. (2020). Flash Boys 2.0.
+- Qin, K., et al. (2022). Blockchain Extractable Value.
+- Chainalysis (2024). Lazarus Group Laundering Routes.
+
+## Author
+
+JZACKSLINE 
+Repo: [https://github.com/zandriel-abyss/noir-framework](https://github.com/zandriel-abyss/noir-framework)
+
