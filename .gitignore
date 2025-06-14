@@ -1,3 +1,40 @@
-# .gitignore
+# Virtual environments
+.venv/
 venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+
+# OS metadata
+.DS_Store
+
+# Logs and debug
+*.log
+
+# VSCode/IDE config
+.vscode/
+.idea/
+
+# Data files (raw/processed)
 datasource/raw/
+datasource/processed/
+
+# Large outputs
+*.csv
+*.json
+*.pkl
+*.joblib
+*.h5
+*.pt
+
+# Misc
+*.zip
+*.tar.gz
