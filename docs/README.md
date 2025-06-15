@@ -120,10 +120,30 @@ CSV outputs are saved under `datasource/processed/`.
 - **Mixer Addresses** – Wallets linked to Tornado Cash mixers.
 - **Etherscan API** – Primary data collection source for historical and live tx.
 
+## Data Insights Summary (Pre-Model)
+
+Before entering modeling, key insights were extracted from wallet-level features (L0–L3):
+
+### Feature Correlation (Heatmap)
+- Flags like `burst_tx_ratio` and `burst_tx_flag` are tightly correlated.
+- Combined anomaly tags (`combined_risk_tag`) correlate with `anomaly_iso`, `anomaly_dbscan`, and counterparty scores.
+
+### Behavioral Distributions by Label
+- **`burst_tx_ratio`**: Fraud wallets cluster near 1 (hyperactive bursty behavior).
+- **`dormant_awaken_count`**: Higher in fraud wallets, indicating suspicious gaps in activity.
+- **`num_fraud_counterparties`**: Indicates indirect exposure to known bad actors.
+- **`total_transactions` & `wallet_age_days`**: Fraud wallets have wider and more skewed distributions.
+
+### Observations
+- Labels are imbalanced (fraud-heavy), but meaningful behavioral separation exists.
+- Many suspicious wallets have low active days and mid-level transaction counts.
+- Feature quality is high enough to proceed with hybrid ML modeling (unsupervised + supervised).
+
 ## Roadmap
 
 - ✅ Finalize unified labeled dataset (fraud, normal, suspicious)
-- 🔄 Implement wallet feature engineering script
+- ✅ Build L0–L3 feature pipeline
+- ✅ Visualize feature distributions and correlations
 - 🔄 Train hybrid ML pipeline (unsupervised + supervised)
 - 🔄 Add SHAP-based explainability layer
 - 🔄 Test on Layer-2 data via The Graph or Flipside
@@ -147,6 +167,5 @@ CSV outputs are saved under `datasource/processed/`.
 
 ## Author
 
-JZACKSLINE 
+Jzacksline Soosaiya\
 Repo: [https://github.com/zandriel-abyss/noir-framework](https://github.com/zandriel-abyss/noir-framework)
-
