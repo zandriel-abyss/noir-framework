@@ -172,4 +172,4 @@ Repo: [https://github.com/zandriel-abyss/noir-framework](https://github.com/zand
 
 ---
 
-See [Progress Report](./progress.md) or [Model Evaluation Summary](./evaluation.md) for internal research updates.
+See [Progress Report](https://github.com/zandriel-abyss/noir-framework/blob/main/docs/progress_report.md) or [Model Evaluation Summary](https://github.com/zandriel-abyss/noir-framework/blob/main/docs/evaluation_summary.md) for internal research updates.
