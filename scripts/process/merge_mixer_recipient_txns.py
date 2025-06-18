@@ -21,4 +21,4 @@ df_merged = df_merged.drop_duplicates(subset=["hash"])  # Drop duplicate txns
 
 # Save back
 df_merged.to_csv(output_file, index=False)
-print(f"✅ Merged mixer-recipient txns into: {output_file}")
+print(f"Merged mixer-recipient txns into: {output_file}")

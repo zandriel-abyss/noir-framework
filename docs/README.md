@@ -141,13 +141,13 @@ Before entering modeling, key insights were extracted from wallet-level features
 
 ## Roadmap
 
-- ✅ Finalize unified labeled dataset (fraud, normal, suspicious)
-- ✅ Build L0–L3 feature pipeline
-- ✅ Visualize feature distributions and correlations
-- 🔄 Train hybrid ML pipeline (unsupervised + supervised)
-- 🔄 Add SHAP-based explainability layer
-- 🔄 Test on Layer-2 data via The Graph or Flipside
-- 🔄 Simulate real-time wallet scoring + alert hooks
+-  Finalize unified labeled dataset (fraud, normal, suspicious)
+-  Build L0–L3 feature pipeline
+-  Visualize feature distributions and correlations
+-  Train hybrid ML pipeline (unsupervised + supervised)
+-  Add SHAP-based explainability layer
+-  Test on Layer-2 data via The Graph or Flipside
+-  Simulate real-time wallet scoring + alert hooks
 
 ## References
 
@@ -169,3 +169,7 @@ Before entering modeling, key insights were extracted from wallet-level features
 
 Jzacksline Soosaiya\
 Repo: [https://github.com/zandriel-abyss/noir-framework](https://github.com/zandriel-abyss/noir-framework)
+
+---
+
+See [Progress Report](./progress.md) or [Model Evaluation Summary](./evaluation.md) for internal research updates.

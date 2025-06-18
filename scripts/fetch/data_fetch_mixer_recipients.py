@@ -27,7 +27,7 @@ def fetch_transactions(address):
 df_mixer = pd.read_csv(MIXER_TX_FILE)
 recipient_wallets = df_mixer["to_address"].str.lower().dropna().unique()
 
-print(f"🔍 Found {len(recipient_wallets)} unique recipient wallets from mixer outflows.")
+print(f"Found {len(recipient_wallets)} unique recipient wallets from mixer outflows.")
 
 # --- Fetch Transactions ---
 all_txs = []
@@ -45,6 +45,6 @@ if all_txs:
     df_all = pd.concat(all_txs, ignore_index=True)
     out_path = OUTPUT_DIR / "mixer_recipients_transactions.csv"
     df_all.to_csv(out_path, index=False)
-    print(f"✅ Saved fetched transactions to {out_path}")
+    print(f"Saved fetched txns to {out_path}")
 else:
-    print("⚠️ No transactions fetched.")
+    print("No txns fetched.")

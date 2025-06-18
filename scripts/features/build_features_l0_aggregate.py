@@ -1,3 +1,9 @@
+"""
+L0 - Raw Transaction Stats
+  - Basic aggregate metrics: total txs, avg value, wallet age
+  - Useful for establishing baseline activity patterns
+"""
+
 import pandas as pd
 from pathlib import Path
 

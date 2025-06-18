@@ -31,7 +31,7 @@ def fetch_outgoing_transactions(address, startblock=0, endblock=99999999, sort='
     if response.status_code == 200:
         return response.json().get('result', [])
     else:
-        print(f"❌ Failed to fetch txs for {address}")
+        print(f"Failed to fetch txs for {address}")
         return []
 
 def main():
@@ -50,7 +50,7 @@ def main():
                         tx['value'],
                         tx['timeStamp']
                     ])
-    print(f"✅ Saved recipient list to: {OUTPUT_FILE}")
+    print(f"Saved recipient list to: {OUTPUT_FILE}")
 
 if __name__ == '__main__':
     main()

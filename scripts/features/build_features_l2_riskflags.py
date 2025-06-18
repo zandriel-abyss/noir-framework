@@ -1,3 +1,9 @@
+"""
+L2 - Risk Flags
+  - Counterparty risk scores
+  - Useful for identifying risky wallets
+"""
+
 import pandas as pd
 from collections import defaultdict
 
@@ -48,4 +54,4 @@ df_final[['num_fraud_counterparties', 'num_suspicious_counterparties', 'num_norm
 
 # Save output
 df_final.to_csv(OUTPUT_FILE, index=False)
-print(f"✅ L2 counterparty features saved to: {OUTPUT_FILE}")
+print(f" L2 counterparty features saved to: {OUTPUT_FILE}")

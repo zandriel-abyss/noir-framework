@@ -50,7 +50,7 @@ def main():
 
     df_summary = pd.DataFrame(summaries)
     df_summary.to_csv(OUT_PATH / "transaction_summary.csv", index=False)
-    print("\n✅ Saved summary to: output/transaction_summary.csv")
+    print("\n Saved summary to: output/transaction_summary.csv")
 
 if __name__ == "__main__":
     main()

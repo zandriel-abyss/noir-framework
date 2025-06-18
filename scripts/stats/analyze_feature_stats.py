@@ -45,7 +45,7 @@ for col in plot_cols:
         plt.close()
 
 # Summary
-print("✅ Feature analysis complete.")
+print(" Feature analysis complete.")
 print(f"Missing values in: {list(missing.index)}")
 print(f"Low variance features: {low_variance}")
 print(f"Highly correlated pairs (>0.95): {high_corr_pairs}")

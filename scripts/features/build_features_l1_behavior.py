@@ -1,3 +1,9 @@
+"""
+L1 - Behavioral Features
+  - Transaction frequency patterns
+  - Dormancy/awakening patterns
+  - Error/failure patterns
+"""
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -37,4 +43,4 @@ for wallet, group in df.groupby("wallet_address"):
 features_df = pd.DataFrame(feature_rows)
 OUTPUT_PATH = "datasource/processed/features_l1_behavior.csv"
 features_df.to_csv(OUTPUT_PATH, index=False)
-print(f"✅ L1 behavioral features saved to {OUTPUT_PATH}")
+print(f"L1 behavioral features saved to {OUTPUT_PATH}")

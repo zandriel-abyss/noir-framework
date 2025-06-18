@@ -1,24 +1,23 @@
-
-
-# 📊 Evaluation Summary – Noir Framework (Supervised Models)
+#  Evaluation Summary – Noir Framework (Supervised Models)
 
 This document summarizes the performance and interpretability of our supervised ML models (Random Forest & XGBoost) trained on wallet-level features for blockchain fraud detection.
 
 ---
 
-## ✅ Model Setup
+##  Model Setup
 
 - **Input Features:** Combined L0–L3 wallet features (e.g., transaction volume, anomaly tags, counterparty risk)
 - **Target Labels:** `fraud`, `normal`, `suspicious`
 - **Models Used:**
   - Random Forest Classifier
   - XGBoost Classifier
+  - Graph Neural Network (GCN) using PyTorch Geometric
 - **Explainability Layer:** SHAP values (per-feature impact on predictions)
 - **Dataset Split:** Stratified 80/20 train-test
 
 ---
 
-## 📈 Performance Overview
+##  Performance Overview
 
 ### Random Forest
 
@@ -43,9 +42,22 @@ This document summarizes the performance and interpretability of our supervised 
 - **Overall Accuracy:** 82%
 - **Macro Avg F1:** 0.73
 
+### GNN (Graph Convolutional Network)
+
+| Metric        | Normal | Fraud | Suspicious |
+|---------------|--------|-------|------------|
+| Precision     | 0.00   | 0.67  | 0.00       |
+| Recall        | 0.00   | 0.91  | 0.00       |
+| F1-Score      | 0.00   | 0.77  | 0.00       |
+
+- **Overall Accuracy:** 62%
+- **Macro Avg F1:** 0.26
+
+- **Observation:** The GCN model currently struggles to classify `normal` and `suspicious` labels due to class imbalance and limited graph depth. Fraud detection remains relatively strong, likely due to well-connected fraud clusters in the transaction graph.
+
 ---
 
-## 🔍 SHAP Feature Importance (Random Forest)
+##  SHAP Feature Importance (Random Forest)
 
 Top impactful features:
 1. `avg_tx_value`
@@ -63,16 +75,17 @@ Interpretation:
 
 ---
 
-## 🧠 Key Insights
+##  Key Insights
 
 - **Fraud detection is robust:** Both models show high precision/recall for the `fraud` class.
 - **Suspicious class is underrepresented:** Limited samples result in weaker predictive performance.
 - **Explainability works:** SHAP validates model reasoning aligns with domain heuristics.
 - **Some mislabeled cases remain:** May benefit from active learning or better label curation.
+- **GNN models show potential but need tuning:** The GCN's current underperformance highlights the need for better class balance and richer node features. Despite this, it captures fraud-linked hubs more consistently than random.
 
 ---
 
-## 🛠 Recommendations
+##  Recommendations
 
 - Augment `suspicious` wallet samples for better learning.
 - Consider fine-tuning thresholds for production scoring.
@@ -81,6 +94,8 @@ Interpretation:
 
 ---
 
-📁 Outputs saved:
+## Outputs saved:
 - `output/models/predictions.csv`
 - `output/models/shap_rf_fraud_summary.png`
+- `output/gnn/gnn_data.pt`
+- `output/gnn/gnn_model_results.txt`

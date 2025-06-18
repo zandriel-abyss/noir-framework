@@ -1,3 +1,12 @@
+"""
+L3 - MetaAI + XAI Tags
+- Burst transaction flag
+- Dormant/awake flag
+- Counterparty fraud flag
+- Anomaly flag
+- Failure flag
+"""
+
 import pandas as pd
 
 # Load the L3 MetaAI features
@@ -25,4 +34,4 @@ df['xai_flag'] = df['xai_reason_code'] != "clean"
 
 # Save final enriched L3 with XAI
 df.to_csv("datasource/processed/features_l3_metaai_xai.csv", index=False)
-print("✅ L3 MetaAI + XAI tagging complete → features_l3_metaai_xai.csv")
+print("L3 MetaAI + XAI tagging complete → features_l3_metaai_xai.csv")

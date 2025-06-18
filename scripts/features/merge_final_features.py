@@ -23,4 +23,4 @@ df_merged = df_merged.drop(columns=[col for col in columns_to_drop if col in df_
 
 # Save final combined feature set
 df_merged.to_csv(OUTPUT_PATH, index=False)
-print(f"✅ Final feature set saved to: {OUTPUT_PATH}")
+print(f"Final feature set saved to: {OUTPUT_PATH}")

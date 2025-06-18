@@ -60,7 +60,7 @@ def main():
     df = pd.DataFrame(all_txs)
     output_path = Path('datasource/raw/fraud_transactions.csv')
     df.to_csv(output_path, index=False)
-    print(f"Saved combined fraud transactions to {output_path}")
+    print(f"Saved combined fraud txns to {output_path}")
 
 if __name__ == '__main__':
     main()

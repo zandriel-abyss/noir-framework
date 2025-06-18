@@ -36,7 +36,7 @@ def main():
                     tx['wallet_address'] = addr
                 all_transactions.extend(tx_list)
             else:
-                print(f"No transactions found for: {addr}")
+                print(f"No txns found for: {addr}")
         else:
             print(f"Failed to fetch: {addr}")
 
@@ -48,9 +48,9 @@ def main():
             writer = csv.DictWriter(f, fieldnames=keys)
             writer.writeheader()
             writer.writerows(all_transactions)
-        print(f"Saved all mixer transactions to {output_file}")
+        print(f"Saved all mixer txns to {output_file}")
     else:
-        print("No transactions found for any mixer addresses.")
+        print("No txns found for any mixer addresses.")
 
 if __name__ == '__main__':
     main()

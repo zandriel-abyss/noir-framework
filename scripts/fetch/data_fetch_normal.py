@@ -89,9 +89,9 @@ def main():
         df = pd.DataFrame(all_txs)
         output_path = output_dir / 'normal_transactions.csv'
         df.to_csv(output_path, index=False)
-        print(f"Saved {len(df)} total transaction rows to {output_path}")
+        print(f"Saved {len(df)} total txn rows to {output_path}")
     else:
-        print("No transactions collected; normal_transactions.csv not created.")
+        print("No txns collected; normal_transactions.csv not created.")
 
 if __name__ == '__main__':
     main()

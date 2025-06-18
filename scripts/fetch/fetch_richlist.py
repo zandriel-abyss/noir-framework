@@ -5,19 +5,12 @@ Scrapes the EtherScan rich-list (https://etherscan.io/accounts) and returns a fi
 list of wallets **not** present in either an OFAC sanctions file or a known-hackers
 file.
 
-Run it with no arguments and it will automatically use the two path names you just
-sent me:
+Run it with no arguments and it will automatically use these paths:
 
     • /Users/jzackslineandreela/Downloads/noir-framework/datasource/raw/nk-hackers.txt
     • /Users/jzackslineandreela/Downloads/noir-framework/datasource/raw/ofac-eth-addresses.txt
 
-You can still override these via the usual `--ofac` / `--hackers` cli flags.
-
-₪  Example
----------
-$ python fetch_richlist.py --pages 50 --outfile clean-richlist.txt
-
-Each rich-list page contains 50 addresses; so `--pages 20` ≈ top-1,000 wallets.
+Can still override these via the usual `--ofac` / `--hackers` cli flags.
 """
 from __future__ import annotations
 
