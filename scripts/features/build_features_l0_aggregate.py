@@ -2,6 +2,15 @@
 L0 - Raw Transaction Stats
   - Basic aggregate metrics: total txs, avg value, wallet age
   - Useful for establishing baseline activity patterns
+  for each eallet->
+    Counts total transactions.
+    Sums and averages transaction values.
+    Calculates wallet age (time between first and last transaction).
+    Counts unique counterparties (from and to).
+    Counts "circular" transactions (where from and to are the same wallet).
+    Counts "dormant awakenings" (gaps >30 days between transactions).
+    Assigns a label (if available).
+
 """
 
 import pandas as pd

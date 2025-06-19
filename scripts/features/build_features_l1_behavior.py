@@ -1,5 +1,5 @@
 """
-L1 - Behavioral Features
+L1 - Behavioral Features (from txn histories)
   - Transaction frequency patterns
   - Dormancy/awakening patterns
   - Error/failure patterns
@@ -32,9 +32,9 @@ for wallet, group in df.groupby("wallet_address"):
         "total_transactions": len(group),
         "wallet_age_days": (group["timeStamp"].max() - group["timeStamp"].min()).days + 1,
         "active_days": group["timeStamp"].dt.date.nunique(),
-        "burst_tx_ratio": (tx_diffs <= 1).sum() / len(tx_diffs) if len(tx_diffs) > 0 else 0,
+        "burst_tx_ratio": (tx_diffs <= 1).sum() / len(tx_diffs) if len(tx_diffs) > 0 else 0, #fraction of transactions occurring within 1 hour of the previous
         "dormant_awaken_count": ((tx_diffs > 30*24).sum()) if len(tx_diffs) > 0 else 0,
-        "failure_ratio": group["isError"].astype(int).sum() / len(group),
+        "failure_ratio": group["isError"].astype(int).sum() / len(group), #fraction of failed txns
     }
 
     feature_rows.append(feature)

@@ -1,5 +1,5 @@
 """
-L2 - Risk Flags
+L2 - Risk Flags (flags wallets based on their interactions with known risky counterparties)
   - Counterparty risk scores
   - Useful for identifying risky wallets
 """
