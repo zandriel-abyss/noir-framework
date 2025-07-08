@@ -6,7 +6,7 @@ from pathlib import Path
 
 # File paths
 TX_FILE = Path("datasource/raw/all_transactions_labeled.csv")
-WALLET_FEATURES_FILE = Path("datasource/processed/features_final_all_layers.csv")
+WALLET_FEATURES_FILE = Path("datasource/processed/features_for_training.csv")
 EDGE_LIST_FILE = Path("output/gnn/graph_edgelist.csv")
 NODE_FEATURES_FILE = Path("output/gnn/graph_node_features.csv")
 GRAPH_PICKLE_FILE = Path("output/gnn/graph.gpickle")
@@ -32,9 +32,15 @@ print(f" Edge list saved to {EDGE_LIST_FILE}")
 
 # Normalize wallet addresses in node features
 df_nodes['wallet_address'] = df_nodes['wallet_address'].str.lower()
+# Remove non-standard wallet addresses (e.g., 'genesis' or malformed addresses)
+df_nodes = df_nodes[df_nodes['wallet_address'].str.match(r'^0x[a-fA-F0-9]{40}$')]
 
-# Save node features
 df_nodes = df_nodes.drop_duplicates(subset=['wallet_address'])
+
+# Ensure only nodes present in the edge list are included
+valid_addresses = set(edge_weights['source']).union(set(edge_weights['target']))
+df_nodes = df_nodes[df_nodes['wallet_address'].isin(valid_addresses)]
+
 df_nodes.to_csv(NODE_FEATURES_FILE, index=False)
 print(f" Node features saved to {NODE_FEATURES_FILE}")
 

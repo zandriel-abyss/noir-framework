@@ -1,0 +1,21 @@
+Edge List Summary:
+num_edges: 77768
+num_unique_sources: 52995
+num_unique_targets: 5862
+min_weight: 0.0
+max_weight: 1e+308
+mean_weight: 1.5615736927462186e+303
+median_weight: 4.69618e+16
+num_zero_weight: 32919
+num_nonzero_weight: 44849
+
+Degree Distribution (summary):
+         out_degree     in_degree
+count  58508.000000  58508.000000
+mean       1.329186      1.329186
+std        5.521672     65.035595
+min        0.000000      0.000000
+25%        1.000000      0.000000
+50%        1.000000      0.000000
+75%        1.000000      0.000000
+max      903.000000   6844.000000

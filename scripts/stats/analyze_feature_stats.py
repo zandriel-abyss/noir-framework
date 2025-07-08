@@ -2,6 +2,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 INPUT_PATH = "datasource/processed/features_final_all_layers.csv"
 
@@ -29,7 +30,9 @@ plt.figure(figsize=(14,10))
 sns.heatmap(corr, cmap='coolwarm', center=0)
 plt.title("Feature Correlation Heatmap")
 plt.tight_layout()
-plt.savefig("docs/plots/correlation_heatmap.png")
+OUT_PLOT_DIR = "output/feature_analysis"
+os.makedirs(OUT_PLOT_DIR, exist_ok=True)
+plt.savefig(f"{OUT_PLOT_DIR}/correlation_heatmap.png")
 plt.close()
 
 # KDE plots by label (for select features)
@@ -41,7 +44,7 @@ for col in plot_cols:
         plt.figure()
         sns.kdeplot(data=df, x=col, hue='label', fill=True)
         plt.title(f"{col} distribution by label")
-        plt.savefig(f"docs/plots/distribution_{col}.png")
+        plt.savefig(f"{OUT_PLOT_DIR}/distribution_{col}.png")
         plt.close()
 
 # Summary
@@ -49,3 +52,9 @@ print(" Feature analysis complete.")
 print(f"Missing values in: {list(missing.index)}")
 print(f"Low variance features: {low_variance}")
 print(f"Highly correlated pairs (>0.95): {high_corr_pairs}")
+
+with open(f"{OUT_PLOT_DIR}/feature_analysis_summary.txt", "w") as f:
+    f.write("Feature analysis complete.\n")
+    f.write(f"Missing values in: {list(missing.index)}\n")
+    f.write(f"Low variance features: {low_variance}\n")
+    f.write(f"Highly correlated pairs (>0.95): {high_corr_pairs}\n")

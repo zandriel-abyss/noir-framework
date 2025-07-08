@@ -1,24 +1,24 @@
 # Noir Framework – Progress Snapshot
 
-##  Current Milestone: Feature Engineering Complete
+## Current Milestone: Feature Engineering and Model Evaluation Complete
 
-All wallet-level features are now generated and saved. This includes:
+- L0: Raw stats from processed transactions (e.g., total tx, avg value)
+- L1: Behavioral patterns (burst ratios, dormant awakenings, tx timing)
+- L2: Heuristic risk flags (mixer links, fraud counterparties, anomaly flags)
+- L3: MetaAI layers (unsupervised scores, reason tags, XAI explanation markers)
+- SHAP Summary: Feature importance evaluated using Random Forest SHAP
+- Mixer Tracebacks: Recipients and interactions extracted for enriched labels
+- GNN Dataset: Wallet graph (nodes + edges) built for message-passing learning
 
--  L0: Raw stats from processed transactions
--  L1: Behavioral features (dormancy, burst activity)
--  L2: Risk flags from mixers, bridges, and label associations
--  L3: MetaAI tags with anomaly scores, counterparty risk profiling, and XAI reason codes
--  Mixer Recipient Phase: Newly integrated mixer recipient wallet tracebacks and transactions
--  GNN Graph Dataset: Wallet-to-wallet edge list and node features generated
+## Current Phase: Full Model Evaluation and Interpretation
 
-##  Current Phase: Model Training & Evaluation
-
-- Random Forest and XGBoost classifiers trained
-- Evaluation metrics analyzed (precision, recall, f1-score)
-- Mixer-linked wallet performance under review
-- SHAP explanations and predictions exported
-- GNN model (Graph Convolutional Network) trained on wallet graph
-- Graph-based classification performance reviewed (early-stage)
+- Random Forest and XGBoost classifiers trained on final merged features
+- Confusion matrices and classification reports generated for all classes
+- SHAP analysis conducted (summary + beeswarm for top features)
+- Feature distribution and correlation heatmap visualized by label
+- GNN Model (GCN) trained on PyTorch Geometric graph
+- GNN results reviewed with t-SNE and node visualizations
+- Comparative limitations noted (e.g., GNN underfit due to small sample)
 
 ##  Dataset Overview
 
@@ -58,3 +58,18 @@ scripts/gnn/
 ├── prep_gnn_input.py
 ├── train_gnn_model.py
 ```
+
+## Key Findings
+
+- Fraud wallets exhibit distinct patterns in burst_tx_ratio, dormant awakenings, and high counterparty fraud counts.
+- Combined risk tag and anomaly flags correlate strongly with fraud label.
+- SHAP highlights `active_days`, `burst_tx_ratio`, and `failure_ratio` as influential.
+- Graph analysis reveals dense clustering among high-risk wallets.
+- GNN accuracy is currently limited; future improvements include larger training set and temporal edge encoding.
+
+## Next Steps
+
+- Finalize explainability layer with rule-based tags (L3 XAI reason codes)
+- Expand GNN sample size and re-train with edge weights/time
+- Conduct ablation study for most influential features
+- Prepare thesis demo visuals and integrated pipeline summary
