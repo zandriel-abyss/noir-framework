@@ -27,7 +27,11 @@ df_tx['to'] = df_tx['to'].str.lower()
 # Generate edge list with weights (sum of ETH transferred between wallets)
 edge_weights = df_tx.groupby(['from', 'to'])['value'].sum().reset_index()
 edge_weights.columns = ['source', 'target', 'weight']
+edge_weights['weight'] = pd.to_numeric(edge_weights['weight'], errors='coerce')
+edge_weights['weight'] = edge_weights['weight'].fillna(0)
+edge_weights['weight'] = edge_weights['weight'].clip(upper=1e6)
 edge_weights.to_csv(EDGE_LIST_FILE, index=False)
+print("Clipped edge weights above 1e6 ETH")
 print(f" Edge list saved to {EDGE_LIST_FILE}")
 
 # Normalize wallet addresses in node features
@@ -40,6 +44,12 @@ df_nodes = df_nodes.drop_duplicates(subset=['wallet_address'])
 # Ensure only nodes present in the edge list are included
 valid_addresses = set(edge_weights['source']).union(set(edge_weights['target']))
 df_nodes = df_nodes[df_nodes['wallet_address'].isin(valid_addresses)]
+
+# Drop node features with zero variance
+nunique = df_nodes.nunique()
+zero_var_cols = nunique[nunique <= 1].index.tolist()
+df_nodes.drop(columns=zero_var_cols, inplace=True)
+print(f"Dropped zero-variance columns: {zero_var_cols}")
 
 df_nodes.to_csv(NODE_FEATURES_FILE, index=False)
 print(f" Node features saved to {NODE_FEATURES_FILE}")

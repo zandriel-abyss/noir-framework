@@ -1,33 +1,35 @@
 Node Label Distribution:
-label
-1    155
-0     50
-2     34
+label_str
+fraud         155
+normal         50
+suspicious     34
 Name: count, dtype: int64
 
 Feature Statistics (mean/std/min/max):
-                                       mean  ...           max
-total_transactions             1.290682e+03  ...  1.000000e+04
-wallet_age_days                6.819498e+02  ...  3.593000e+03
-active_days                    7.693305e+01  ...  1.282000e+03
-burst_tx_ratio                 6.184312e-01  ...  1.000000e+00
-dormant_awaken_count           2.263598e+00  ...  1.600000e+01
-failure_ratio                  4.470080e-02  ...  1.000000e+00
-num_fraud_counterparties       6.426778e+00  ...  6.040000e+02
-num_suspicious_counterparties  3.054393e+00  ...  1.650000e+02
-num_normal_counterparties      4.602510e-02  ...  9.000000e+00
-anomaly_iso                    5.020921e-02  ...  1.000000e+00
-combined_risk_tag              1.631799e-01  ...  1.000000e+00
-total_value                    4.113390e+22  ...  1.924566e+24
-avg_tx_value                   2.966159e+20  ...  8.583729e+21
-
-[13 rows x 4 columns]
+                                       mean           std     min           max
+total_transactions             1.290682e+03  2.949890e+03  1.0000  1.000000e+04
+wallet_age_days                6.819498e+02  7.957678e+02  1.0000  3.593000e+03
+active_days                    7.693305e+01  1.594889e+02  1.0000  1.282000e+03
+burst_tx_ratio                 6.184312e-01  3.105239e-01  0.0000  1.000000e+00
+dormant_awaken_count           2.263598e+00  3.239977e+00  0.0000  1.600000e+01
+failure_ratio                  4.470080e-02  1.676733e-01  0.0000  1.000000e+00
+mean_tx_interval_hours         5.526327e+02  1.311278e+03  0.0001  9.256000e+03
+std_tx_interval_hours          1.316442e+03  2.404073e+03  0.0100  1.552868e+04
+weekend_tx_ratio               2.850682e-01  2.442168e-01  0.0000  1.000000e+00
+night_tx_ratio                 2.558985e-01  2.163817e-01  0.0000  1.000000e+00
+num_fraud_counterparties       6.426778e+00  4.649724e+01  0.0000  6.040000e+02
+num_suspicious_counterparties  3.054393e+00  1.674127e+01  0.0000  1.650000e+02
+num_normal_counterparties      4.602510e-02  5.887379e-01  0.0000  9.000000e+00
+anomaly_iso                    5.020921e-02  2.188347e-01  0.0000  1.000000e+00
+combined_risk_tag              2.594142e-01  4.392331e-01  0.0000  1.000000e+00
+total_value                    4.113390e+22  1.719183e+23  0.0000  1.924566e+24
+avg_tx_value                   2.966159e+20  8.895888e+20  0.0000  8.583729e+21
 
 Flag Summary by Label:
-       anomaly_iso  combined_risk_tag  ...  failure_flag  xai_flag
-label                                  ...                        
-0         0.000000           0.080000  ...      0.020000  0.720000
-1         0.045161           0.129032  ...      0.045161  0.774194
-2         0.147059           0.441176  ...      0.000000  0.823529
+            anomaly_iso  combined_risk_tag  ...  failure_flag  xai_flag
+label_str                                   ...                        
+fraud          0.025806           0.212903  ...      0.045161  0.800000
+normal         0.020000           0.160000  ...      0.020000  0.780000
+suspicious     0.205882           0.617647  ...      0.000000  0.852941
 
 [3 rows x 8 columns]

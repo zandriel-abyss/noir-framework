@@ -3,9 +3,9 @@ num_edges: 77768
 num_unique_sources: 52995
 num_unique_targets: 5862
 min_weight: 0.0
-max_weight: 1e+308
-mean_weight: 1.5615736927462186e+303
-median_weight: 4.69618e+16
+max_weight: 1000000.0
+mean_weight: 576523.942868532
+median_weight: 1000000.0
 num_zero_weight: 32919
 num_nonzero_weight: 44849
 

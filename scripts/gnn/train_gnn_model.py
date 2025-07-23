@@ -8,8 +8,35 @@ import pandas as pd
 import pickle
 import numpy as np
 
+# Load updated labels from merged feature file
+label_df = pd.read_csv("datasource/processed/wallet_node_labels_merged.csv")
+wallet_to_label = dict(zip(label_df["wallet_address"], label_df["label_y"]))
+
 # Load the preprocessed graph
 data = torch.load("output/gnn/gnn_data.pt", weights_only=False)
+
+# Replace data.y using the updated labels
+with open("output/gnn/index_to_wallet.pkl", "rb") as f:
+    index_to_wallet = pickle.load(f)
+
+if isinstance(index_to_wallet, list):
+    index_to_wallet = {i: w for i, w in enumerate(index_to_wallet)}
+
+if not isinstance(index_to_wallet, dict):
+    raise ValueError("index_to_wallet must be a dictionary")
+
+new_labels = []
+for idx in range(len(index_to_wallet)):
+    wallet = index_to_wallet.get(idx)
+    label = wallet_to_label.get(wallet, -1)
+    if isinstance(label, str):
+        label = {"normal": 0, "fraud": 1,"suspicious": 2}.get(label.lower(), -1)
+    new_labels.append(label)
+
+unmatched = [index_to_wallet.get(i) for i, label in enumerate(new_labels) if label == -1]
+print(f"⚠️ Unmatched wallets: {len(unmatched)} (will be skipped)")
+
+data.y = torch.tensor(new_labels, dtype=torch.long)
 
 print(f"Initial node feature shape: {data.x.shape}")
 print(f"Initial edge index shape: {data.edge_index.shape}")
@@ -178,16 +205,74 @@ def get_embeddings(model, data):
 embeddings = get_embeddings(model, data)
 y = data.y.cpu().numpy()
 
-tsne = TSNE(n_components=2, random_state=42)
+
+from sklearn.manifold import TSNE
+from mpl_toolkits.mplot3d import Axes3D  # for 3D plotting
+
+# 3D t-SNE
+tsne = TSNE(n_components=3, random_state=42)
 z = tsne.fit_transform(embeddings)
 
-plt.figure(figsize=(8,6))
-plt.scatter(z[:, 0], z[:, 1], c=y, cmap='coolwarm', s=10)
-plt.title("t-SNE Visualization of Node Embeddings")
-plt.xlabel("Component 1")
-plt.ylabel("Component 2")
-plt.savefig("output/gnn/tsne_embeddings.png")
-print("t-SNE plot saved to output/gnn/tsne_embeddings.png")
+fig = plt.figure(figsize=(10, 7))
+ax = fig.add_subplot(111, projection='3d')
+
+# Manually define colors per class index
+color_map = {0: 'blue', 1: 'red', 2: 'grey'}  # 0=normal, 1=fraud, 2=suspicious
+colors = [color_map[label] for label in y]
+
+scatter = ax.scatter(z[:, 0], z[:, 1], z[:, 2], c=colors, s=20)
+ax.set_title("3D t-SNE Visualization of Node Embeddings")
+ax.set_xlabel("Component 1")
+ax.set_ylabel("Component 2")
+ax.set_zlabel("Component 3")
+
+# Add manual legend
+from matplotlib.lines import Line2D
+legend_elements = [
+    Line2D([0], [0], marker='o', color='w', label='normal', markerfacecolor='blue', markersize=8),
+    Line2D([0], [0], marker='o', color='w', label='fraud', markerfacecolor='red', markersize=8),
+    Line2D([0], [0], marker='o', color='w', label='suspicious', markerfacecolor='grey', markersize=8),
+]
+ax.legend(handles=legend_elements)
+
+plt.tight_layout()
+plt.savefig("output/gnn/tsne_embeddings_3d.png")
+print("3D t-SNE plot saved to output/gnn/tsne_embeddings_3d.png")
+
+# Optional Interactive Plotly 3D t-SNE Visualization
+try:
+    import plotly.express as px
+    import plotly.io as pio
+
+    label_names = {0: 'normal', 1: 'fraud', 2: 'suspicious'}
+    color_map_plotly = {0: 'blue', 1: 'red', 2: 'grey'}
+
+    plot_df = pd.DataFrame({
+        'Component 1': z[:, 0],
+        'Component 2': z[:, 1],
+        'Component 3': z[:, 2],
+        'Label': [label_names[label] for label in y],
+        'Color': [color_map_plotly[label] for label in y]
+    })
+
+    fig_plotly = px.scatter_3d(
+        plot_df,
+        x='Component 1',
+        y='Component 2',
+        z='Component 3',
+        color='Label',
+        color_discrete_map={
+            'normal': 'blue',
+            'fraud': 'red',
+            'suspicious': 'grey'
+        },
+        title='Interactive 3D t-SNE Embedding Visualization'
+    )
+
+    fig_plotly.write_html("output/gnn/tsne_embeddings_3d_interactive.html")
+    print("✅ Interactive 3D plot saved to output/gnn/tsne_embeddings_3d_interactive.html")
+except ImportError:
+    print("⚠️ Plotly not installed. Skipping interactive plot.")
 
 # After evaluation, get predictions for test set
 model.eval()
@@ -210,11 +295,11 @@ else:
     if max(test_indices) >= len(index_to_wallet):
         print("⚠️ Warning: Wallet mapping does not align with test indices!")
 
-    # Save predictions
+    safe_indices = [i for i in test_indices if i < len(index_to_wallet)]
     df = pd.DataFrame({
-        "wallet_address": [index_to_wallet[i] for i in test_indices],
-        "true_label": y_true[test_indices],
-        "gnn_pred": preds[test_indices]
+        "wallet_address": [index_to_wallet[i] for i in safe_indices],
+        "true_label": y_true[safe_indices],
+        "gnn_pred": preds[safe_indices]
     })
     df.to_csv("output/gnn/gnn_predictions.csv", index=False)
     print("GNN predictions saved to output/gnn/gnn_predictions.csv")

@@ -4,7 +4,7 @@ from torch_geometric.data import Data
 import pandas as pd
 import pickle
 
-NODE_FEATURES_FILE = "output/gnn/graph_node_features.csv"
+NODE_FEATURES_FILE = "datasource/processed/features_final_all_layers.csv"
 
 # Load graph
 with open("output/gnn/graph.gpickle", "rb") as f:
@@ -17,11 +17,15 @@ node_id_to_wallet = nx.get_node_attributes(G, "wallet_address")
 index_to_wallet = [node_id_to_wallet[i] for i in range(len(G.nodes))]
 
 df = pd.read_csv(NODE_FEATURES_FILE)
+
+if 'wallet_address' not in df.columns or 'label' not in df.columns:
+    raise ValueError("Expected 'wallet_address' and 'label' columns in dataset.")
+
 df.set_index("wallet_address", inplace=True)
-df = df.reindex(index_to_wallet).dropna()  # ensure order matches graph, drop missing
-missing_wallets = set(index_to_wallet) - set(df.index)
+df = df.reindex(index_to_wallet)  # retain all nodes, even if some features are missing
+missing_wallets = set(index_to_wallet) - set(df.dropna().index)
 if missing_wallets:
-    print(f"⚠️ Warning: {len(missing_wallets)} wallets missing from node feature CSV and were dropped.")
+    print(f"⚠️ Warning: {len(missing_wallets)} wallets missing features. Keeping them with NaNs.")
 
 feature_cols = [
     "total_transactions", "wallet_age_days", "active_days", "burst_tx_ratio",
@@ -30,7 +34,7 @@ feature_cols = [
     "anomaly_iso", "anomaly_dbscan"
 ]
 feature_cols = [col for col in feature_cols if col in df.columns]
-x = torch.tensor(df[feature_cols].values, dtype=torch.float)
+x = torch.tensor(df[feature_cols].fillna(0).values, dtype=torch.float)
 
 label_map = {"normal": 0, "fraud": 1, "suspicious": 2}
 y = torch.tensor(df["label"].map(label_map).fillna(-1).astype(int).values, dtype=torch.long)

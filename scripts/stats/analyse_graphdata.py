@@ -39,28 +39,30 @@ nodes = pd.read_csv(NODE_FILE)
 
 # Label distribution
 if 'label' in nodes.columns:
-    label_counts = nodes['label'].value_counts()
+    label_reverse_map = {0: 'normal', 1: 'fraud', 2: 'suspicious'}
+    nodes['label_str'] = nodes['label'].map(label_reverse_map)
+    label_counts = nodes['label_str'].value_counts()
     label_counts.to_csv(f"{OUT_DIR}/label_distribution.csv")
 
 # Feature statistics
-feature_cols = [col for col in nodes.columns if col not in ['wallet_address', 'label', 'xai_reason_code']]
+feature_cols = [col for col in nodes.columns if col not in ['wallet_address', 'label', 'label_str', 'xai_reason_code'] and nodes[col].dtype != 'object']
 feature_stats = nodes[feature_cols].describe().T
 feature_stats.to_csv(f"{OUT_DIR}/node_feature_stats.csv")
 
 # Correlation with label (mean per class)
 if 'label' in nodes.columns:
-    feature_means_by_label = nodes.groupby('label')[feature_cols].mean()
+    feature_means_by_label = nodes.groupby('label_str')[feature_cols].mean()
     feature_means_by_label.to_csv(f"{OUT_DIR}/feature_means_by_label.csv")
 
 # Anomaly/risk flag summary
 flag_cols = [col for col in nodes.columns if col.endswith('_flag') or 'anomaly' in col or 'risk' in col]
 if flag_cols and 'label' in nodes.columns:
-    flag_summary = nodes.groupby('label')[flag_cols].mean()
+    flag_summary = nodes.groupby('label_str')[flag_cols].mean()
     flag_summary.to_csv(f"{OUT_DIR}/flag_summary_by_label.csv")
 
 # XAI reason code counts
 if 'xai_reason_code' in nodes.columns and 'label' in nodes.columns:
-    xai_counts = nodes.groupby('label')['xai_reason_code'].value_counts().unstack(fill_value=0)
+    xai_counts = nodes.groupby('label_str')['xai_reason_code'].value_counts().unstack(fill_value=0)
     xai_counts.to_csv(f"{OUT_DIR}/xai_reason_code_counts.csv")
 
 # --- Save edge summary as text ---
@@ -82,10 +84,10 @@ with open(f"{OUT_DIR}/node_summary.txt", "w") as f:
     f.write(str(feature_stats[['mean', 'std', 'min', 'max']]))
     if flag_cols and 'label' in nodes.columns:
         f.write("\n\nFlag Summary by Label:\n")
-        f.write(str(flag_summary))
+        f.write(str(flag_summary))  # Now grouped by label_str
     if 'xai_reason_code' in nodes.columns and 'label' in nodes.columns:
         f.write("\n\nXAI Reason Code Counts by Label:\n")
-        f.write(str(xai_counts))
+        f.write(str(xai_counts))  # Now grouped by label_str
 
 print(f"Analysis complete. Results saved to {OUT_DIR}/")
 

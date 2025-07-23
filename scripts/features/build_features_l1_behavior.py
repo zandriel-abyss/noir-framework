@@ -35,6 +35,11 @@ for wallet, group in df.groupby("wallet_address"):
         "burst_tx_ratio": (tx_diffs <= 1).sum() / len(tx_diffs) if len(tx_diffs) > 0 else 0, #fraction of transactions occurring within 1 hour of the previous
         "dormant_awaken_count": ((tx_diffs > 30*24).sum()) if len(tx_diffs) > 0 else 0,
         "failure_ratio": group["isError"].astype(int).sum() / len(group), #fraction of failed txns
+        "mean_tx_interval_hours": np.mean(tx_diffs) if len(tx_diffs) > 0 else np.nan,
+        "std_tx_interval_hours": np.std(tx_diffs) if len(tx_diffs) > 0 else np.nan,
+        "weekend_tx_ratio": (group["timeStamp"].dt.weekday >= 5).mean(),
+        "txn_span_hours": (group["timeStamp"].max() - group["timeStamp"].min()).total_seconds() / 3600,
+        "night_tx_ratio": ((group["timeStamp"].dt.hour < 6) | (group["timeStamp"].dt.hour >= 22)).mean(),
     }
 
     feature_rows.append(feature)

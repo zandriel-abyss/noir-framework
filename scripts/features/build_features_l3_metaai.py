@@ -17,9 +17,20 @@ OUTPUT_FILE = 'datasource/processed/features_l3_metaai.csv'
 # Load L2 features
 df = pd.read_csv(INPUT_FILE)
 
+# Create default columns if missing
+if 'smart_contract_failures' not in df.columns:
+    df['smart_contract_failures'] = 0
+if 'layer_hopping_count' not in df.columns:
+    df['layer_hopping_count'] = 0
+if 'circular_tx_ratio' not in df.columns:
+    df['circular_tx_ratio'] = 0.0
+if 'avg_gas_fee' not in df.columns:
+    df['avg_gas_fee'] = 0.0
+
 # Set index and drop non-numeric cols for modeling
 wallets = df['wallet_address']
 X = df.drop(columns=['wallet_address'] + (['label'] if 'label' in df.columns else []))
+X = X.fillna(0)
 
 # Normalize data
 scaler = StandardScaler()
