@@ -25,7 +25,7 @@ df.set_index("wallet_address", inplace=True)
 df = df.reindex(index_to_wallet)  # retain all nodes, even if some features are missing
 missing_wallets = set(index_to_wallet) - set(df.dropna().index)
 if missing_wallets:
-    print(f"⚠️ Warning: {len(missing_wallets)} wallets missing features. Keeping them with NaNs.")
+    print(f"Warning: {len(missing_wallets)} wallets missing features. Keeping them with NaNs.")
 
 feature_cols = [
     "total_transactions", "wallet_age_days", "active_days", "burst_tx_ratio",

@@ -270,9 +270,9 @@ try:
     )
 
     fig_plotly.write_html("output/gnn/tsne_embeddings_3d_interactive.html")
-    print("✅ Interactive 3D plot saved to output/gnn/tsne_embeddings_3d_interactive.html")
+    print("Interactive 3D plot saved to output/gnn/tsne_embeddings_3d_interactive.html")
 except ImportError:
-    print("⚠️ Plotly not installed. Skipping interactive plot.")
+    print("Plotly not installed. Skipping interactive plot.")
 
 # After evaluation, get predictions for test set
 model.eval()

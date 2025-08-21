@@ -16,7 +16,7 @@ print("Non-null true_label_sup:", merged['true_label_sup'].notnull().sum())
 
 # Exit if merge is empty
 if merged.shape[0] == 0:
-    print("⚠️ No overlapping wallet addresses found between GNN and supervised models.")
+    print("No overlapping wallet addresses found between GNN and supervised models.")
     sys.exit()
 
 # Use the correct true_label column
@@ -52,7 +52,7 @@ if merged['true_label'].notnull().sum() > 0:
     print("XGB Classification Report:")
     print(classification_report(merged['true_label'], merged['xgb_pred']))
 else:
-    print("⚠️ No valid labels for classification report.")
+    print("No valid labels for classification report.")
 
 import seaborn as sns
 import matplotlib.pyplot as plt
