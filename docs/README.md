@@ -128,7 +128,7 @@ noir-framework/
 
 ---
 
-## ▶ Quick Start
+## Quick Start
 
 ```bash
 # Clone and set up environment
@@ -142,7 +142,7 @@ pip install -r requirements.txt
 ETHERSCAN_API_KEY=your_etherscan_key
 ```
 
-## 🛠️ Usage Examples
+## Usage Examples
 
 ```bash
 # 1. Fetch transaction data

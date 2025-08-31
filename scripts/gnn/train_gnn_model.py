@@ -34,7 +34,7 @@ for idx in range(len(index_to_wallet)):
     new_labels.append(label)
 
 unmatched = [index_to_wallet.get(i) for i, label in enumerate(new_labels) if label == -1]
-print(f"⚠️ Unmatched wallets: {len(unmatched)} (will be skipped)")
+print(f"Unmatched wallets: {len(unmatched)} (will be skipped)")
 
 data.y = torch.tensor(new_labels, dtype=torch.long)
 
@@ -293,7 +293,7 @@ else:
         index_to_wallet = pickle.load(f)
 
     if max(test_indices) >= len(index_to_wallet):
-        print("⚠️ Warning: Wallet mapping does not align with test indices!")
+        print("Warning: Wallet mapping does not align with test indices!")
 
     safe_indices = [i for i in test_indices if i < len(index_to_wallet)]
     df = pd.DataFrame({
