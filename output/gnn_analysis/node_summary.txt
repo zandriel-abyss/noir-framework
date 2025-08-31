@@ -1,35 +1,41 @@
 Node Label Distribution:
 label_str
-fraud         155
+fraud         152
 normal         50
-suspicious     34
+suspicious     35
 Name: count, dtype: int64
 
 Feature Statistics (mean/std/min/max):
-                                       mean           std     min           max
-total_transactions             1.290682e+03  2.949890e+03  1.0000  1.000000e+04
-wallet_age_days                6.819498e+02  7.957678e+02  1.0000  3.593000e+03
-active_days                    7.693305e+01  1.594889e+02  1.0000  1.282000e+03
-burst_tx_ratio                 6.184312e-01  3.105239e-01  0.0000  1.000000e+00
-dormant_awaken_count           2.263598e+00  3.239977e+00  0.0000  1.600000e+01
-failure_ratio                  4.470080e-02  1.676733e-01  0.0000  1.000000e+00
-mean_tx_interval_hours         5.526327e+02  1.311278e+03  0.0001  9.256000e+03
-std_tx_interval_hours          1.316442e+03  2.404073e+03  0.0100  1.552868e+04
-weekend_tx_ratio               2.850682e-01  2.442168e-01  0.0000  1.000000e+00
-night_tx_ratio                 2.558985e-01  2.163817e-01  0.0000  1.000000e+00
-num_fraud_counterparties       6.426778e+00  4.649724e+01  0.0000  6.040000e+02
-num_suspicious_counterparties  3.054393e+00  1.674127e+01  0.0000  1.650000e+02
-num_normal_counterparties      4.602510e-02  5.887379e-01  0.0000  9.000000e+00
-anomaly_iso                    5.020921e-02  2.188347e-01  0.0000  1.000000e+00
-combined_risk_tag              2.594142e-01  4.392331e-01  0.0000  1.000000e+00
-total_value                    4.113390e+22  1.719183e+23  0.0000  1.924566e+24
-avg_tx_value                   2.966159e+20  8.895888e+20  0.0000  8.583729e+21
+                                       mean           std  min           max
+total_transactions             1.294886e+03  2.934141e+03  1.0  1.000000e+04
+wallet_age_days                7.073586e+02  7.951467e+02  0.0  3.593000e+03
+active_days                    8.287764e+01  1.692629e+02  0.0  1.282000e+03
+burst_tx_ratio                 6.219888e-01  3.023786e-01  0.0  1.000000e+00
+dormant_awaken_count           2.358650e+00  3.373950e+00  0.0  1.600000e+01
+failure_ratio                  4.016846e-02  1.532862e-01  0.0  1.000000e+00
+mean_tx_interval_hours         5.408580e+02  1.327896e+03  0.0  9.256000e+03
+std_tx_interval_hours          1.306879e+03  2.410607e+03  0.0  1.552868e+04
+weekend_tx_ratio               2.771300e-01  2.401091e-01  0.0  1.000000e+00
+night_tx_ratio                 2.434471e-01  2.041232e-01  0.0  1.000000e+00
+num_fraud_counterparties       6.341772e+00  4.644075e+01  0.0  6.040000e+02
+num_suspicious_counterparties  2.708861e+00  1.598157e+01  0.0  1.640000e+02
+mixer_flag                     8.438819e-02  2.785574e-01  0.0  1.000000e+00
+anomaly_iso                    5.063291e-02  2.197110e-01  0.0  1.000000e+00
+combined_risk_tag              2.320675e-01  4.230453e-01  0.0  1.000000e+00
+burst_tx_flag                  1.856540e-01  3.896501e-01  0.0  1.000000e+00
+dormant_awake_flag             4.388186e-01  4.972930e-01  0.0  1.000000e+00
+counterparty_fraud_flag        2.911392e-01  4.552490e-01  0.0  1.000000e+00
+anomaly_flag                   1.772152e-01  3.826589e-01  0.0  1.000000e+00
+failure_flag                   2.953586e-02  1.696613e-01  0.0  1.000000e+00
+xai_flag                       7.763713e-01  4.175579e-01  0.0  1.000000e+00
+total_value                    4.085371e+22  1.757296e+23  0.0  1.924566e+24
+avg_tx_value                   2.993975e+20  9.571559e+20  0.0  8.886785e+21
 
 Flag Summary by Label:
-            anomaly_iso  combined_risk_tag  ...  failure_flag  xai_flag
-label_str                                   ...                        
-fraud          0.025806           0.212903  ...      0.045161  0.800000
-normal         0.020000           0.160000  ...      0.020000  0.780000
-suspicious     0.205882           0.617647  ...      0.000000  0.852941
+            mixer_flag  anomaly_iso  ...  failure_flag  xai_flag
+label_str                            ...                        
+fraud         0.013158     0.046053  ...      0.039474  0.796053
+normal        0.000000     0.020000  ...      0.020000  0.680000
+suspicious    0.514286     0.114286  ...      0.000000  0.828571
 
-[3 rows x 8 columns]
+[3 rows x 9 columns]

@@ -44,26 +44,34 @@ Captures wallet dynamics and unique interaction patterns:
 
 - `burst_tx_ratio`: Ratio of txs in burst clusters (sudden spikes)
 - `dormant_awaken_count`: # of dormant → active shifts
-- `first_activity_gap`: Delay before first transaction
-- `cross_chain_activity_flag`: Bridge or L2 usage indicator
+- `failure_ratio`: Ratio of failed transactions (from L1)
+- `mean_tx_interval_hours`: Average time between transactions
+- `std_tx_interval_hours`: Standard deviation of time between transactions
+- `weekend_tx_ratio`: Proportion of transactions on weekends
+- `txn_span_hours`: Total duration of wallet activity in hours
+- `night_tx_ratio`: Proportion of transactions during night hours
 
-####  L2 – Risk Indicators & Heuristics
+#### L2 – Risk Indicators & Heuristics
 
 Derived flags based on AML intuition and fraud research:
 
 - `num_fraud_counterparties`: Known bad addresses interacted with
-- `circular_tx_flag`: Funds loop back to self or aliases
-- `high_risk_token_ratio`: % of txs involving known scam tokens
-- `failed_tx_ratio`: High failure rates can signal bots/scripts
+- `circular_flow_flag`: Funds loop back to self or aliases
+- `gas_anomaly_flag`: Flag for unusually high gas fees
+- `rapid_bridging_flag`: Indicator for rapid fund movement across layers
+- `smart_contract_misuse_flag`: Flag for suspicious smart contract interactions
+- `mixer_flag`: Indicates interaction with known mixer services
+- `mixer_then_bridge_flag`: Indicates mixer interaction followed by bridging activity
+- `mixer_exit_tx_count`: Number of transactions exiting mixer services
+- `same_recipient_ratio`: Ratio of transactions to the same recipient
 
-####  L3 – AI & XAI Meta-Signals
+#### L3 – AI & XAI Meta-Signals
 
 Post-model and symbolic enrichment:
 
-- `anomaly_iso`, `anomaly_dbscan`: Scores from Isolation Forest / DBSCAN
-- `shap_top_features`: Top drivers from SHAP explanation
-- `combined_risk_tag`: Synthesized label (e.g., `burst_dormant_mixer`)
-- `reason_code`: Human-readable justification (e.g., “awakening + fraud link”)
+- `anomaly_iso`, `anomaly_dbscan`: Anomaly scores from Isolation Forest / DBSCAN models.
+- `combined_risk_tag`: Synthesized behavioral risk tag.
+- `xai_reason_code`: Human-readable justification for flags (e.g., “burst_tx|fraud_link|model_anomaly”, “dormant_awakened”, “unusual_gas_fee”).
 
 ---
 
@@ -138,22 +146,31 @@ ETHERSCAN_API_KEY=your_etherscan_key
 
 ```bash
 # 1. Fetch transaction data
-python scripts/fetch/fetch_fraud_transactions.py
-python scripts/fetch/fetch_normal_transactions.py
+python3 scripts/fetch/data_fetch_fraud.py
+python3 scripts/fetch/data_fetch_mixers.py
+python3 scripts/fetch/data_fetch_mixer_recipients.py
+python3 scripts/fetch/data_fetch_normal.py
 
 # 2. Build wallet features
-python scripts/features/build_features_l0_aggregate.py
-python scripts/features/build_features_l1_behavior.py
-python scripts/features/build_features_l2_riskflags.py
-python scripts/features/build_features_l3_xai_tags.py
+python3 scripts/features/build_features_l0_aggregate.py
+python3 scripts/features/build_features_l1_behavior.py
+python3 scripts/features/build_features_l2_riskflags.py
+python3 scripts/features/build_features_l3_metaai.py
+python3 scripts/features/build_features_l3_xai_tags.py
 
 # 3. Merge & model
-python scripts/features/merge_final_features.py
-python scripts/models/train_supervised_models.py
+python3 scripts/features/merge_final_features.py
+python3 scripts/models/train_supervised_models.py
 
 # 4. GNN pipeline (optional)
-python scripts/gnn/prep_gnn_input.py
-python scripts/gnn/train_gnn_model.py
+python3 scripts/gnn/build_graph_dataset.py
+python3 scripts/gnn/prep_gnn_input.py
+python3 scripts/gnn/train_gnn_model.py
+python3 scripts/gnn/analyse_predictions.py
+
+# 5. Run the new demo notebooks for a guided walkthrough and live fraud capture
+# For full data pipeline: jupyter lab demo_workflow_walkthrough.ipynb
+# For live fraud detection: jupyter lab demo_live_fraud_capture.ipynb
 ```
 
 ---
@@ -173,7 +190,7 @@ python scripts/gnn/train_gnn_model.py
 - [x] Supervised & unsupervised ML models
 - [x] Explainable outputs (SHAP + symbolic)
 - [x] GNN wallet scoring module
-- [ ] Real-time sandbox scoring API
+- [x] Real-time sandbox scoring API
 - [ ] DAO-integrated fraud reporting (experimental)
 
 ---

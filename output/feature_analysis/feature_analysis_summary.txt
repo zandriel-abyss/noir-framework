@@ -1,4 +1,4 @@
 Feature analysis complete.
 Missing values in: []
-Low variance features: []
-Highly correlated pairs (>0.95): [('anomaly_dbscan', 'anomaly_flag'), ('anomaly_flag', 'anomaly_dbscan')]
+Low variance features: ['num_normal_counterparties', 'circular_flow_flag', 'gas_anomaly_flag', 'rapid_bridging_flag', 'smart_contract_misuse_flag', 'mixer_then_bridge_flag', 'mixer_exit_tx_count', 'same_recipient_ratio', 'smart_contract_failures', 'layer_hopping_count', 'circular_tx_ratio', 'avg_gas_fee']
+Highly correlated pairs (>0.95): [('wallet_age_days', 'txn_span_hours'), ('txn_span_hours', 'wallet_age_days'), ('anomaly_dbscan', 'anomaly_flag'), ('anomaly_flag', 'anomaly_dbscan')]

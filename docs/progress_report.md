@@ -1,34 +1,32 @@
 # Noir Framework – Progress Snapshot
 
-## Current Milestone: Model Evaluation and Graph Analysis Complete
+## Current Milestone: Real-time Inference Module Operational; Model Evaluation and Graph Analysis Complete
 
-- **L0 – Aggregate Statistics**: Basic wallet-level summaries such as total number of transactions (`total_tx`), average transaction value (`avg_tx_value`), and wallet age. These features form the foundation of behavioral profiling.
+- **L0 – Aggregate Statistics**: Basic wallet-level summaries derived from raw transaction data.
+    - Key Features: `total_transactions`, `wallet_age_days`, `avg_tx_value`, `std_tx_interval`.
 
-- **L1 – Behavioral Patterns**: Time-sensitive and pattern-based metrics. Examples include:
-  - `burst_tx_ratio`: Measures the intensity of activity spikes (e.g., multiple transactions in a short time).
-  - `dormant_awakening`: Flags wallets that were inactive for a long period before sudden activity.
-  - `tx_timing_entropy`: Captures irregularity in transaction intervals.
+- **L1 – Behavioral Patterns**: Metrics capturing dynamic and temporal behavioral patterns of wallets.
+    - Key Features: `burst_tx_ratio`, `dormant_awaken_count`, `failure_ratio`, `mean_tx_interval_hours`, `std_tx_interval_hours`, `weekend_tx_ratio`, `txn_span_hours`, `night_tx_ratio`.
 
-- **L2 – Risk Flags and Heuristics**: Boolean or categorical flags derived from known risk behaviors. Includes:
-  - `mixer_interaction_flag`: Wallets interacting with known mixers.
-  - `fraud_counterparty_ratio`: Proportion of counterparties already labeled as fraud.
-  - `anomaly_score_flag`: Thresholded score from Isolation Forest/DBSCAN output.
+- **L2 – Risk Flags and Heuristics**: Boolean or categorical flags derived from AML intuition and identified fraud research patterns.
+    - Key Features: `num_fraud_counterparties`, `circular_flow_flag`, `gas_anomaly_flag`, `rapid_bridging_flag`, `smart_contract_misuse_flag`, `mixer_flag`, `mixer_then_bridge_flag`, `mixer_exit_tx_count`, `same_recipient_ratio`.
 
-- **L3 – MetaAI & Explainability**: Model-derived and symbolic explainability features:
-  - `unsupervised_anomaly_score`: Scaled anomaly score from unsupervised models.
-  - `xai_reason_code`: Tagged explanation using SHAP or rule-based mapping (e.g., “sudden spike in failed txs”).
-  - `meta_label_agreement`: Agreement level between different model types on a fraud prediction.
+- **L3 – MetaAI & Explainability**: Model-derived features from unsupervised anomaly detection and human-interpretable Explainable AI (XAI) tags.
+    - Key Features: `anomaly_iso`, `anomaly_dbscan`, `combined_risk_tag`.
+    - XAI Outputs: `xai_reason_code` (e.g., “burst_tx|fraud_link|model_anomaly”, “dormant_awakened”, “unusual_gas_fee”).
 
 Each layer builds on the prior one, allowing for both human-interpretable and machine-driven insights into wallet behavior across Ethereum and Layer 2 ecosystems.
 
-## Current Phase: Results Synthesis and Thesis Report Compilation
+## Current Phase: Results Synthesis and Documentation
 
 - Classification reports and confusion matrices collected across models
 - GNN results visualized and evaluated (2D + 3D t-SNE, class clustering)
 - Performance comparison: Random Forest vs. GNN vs. XGBoost
-- Interactive dashboards and model interpretability outputs under preparation
+- Real-time fraud detection service (`realtime_inference_service.py`) implemented and validated
+- Comprehensive technical workflow guide (`WORKFLOW_GUIDE.md`) created
+- Interactive demonstration notebooks (`demo_workflow_walkthrough.ipynb`, `demo_live_fraud_capture.ipynb`) developed
 
-##  Dataset Overview
+## Dataset Overview
 
 | Label     | Transactions | Wallets | Time Range     |
 |-----------|--------------|---------|----------------|
@@ -47,44 +45,43 @@ Each layer builds on the prior one, allowing for both human-interpretable and ma
 ##  Repo Structure Highlights
 
 ```
-notebooks/
-├── data-collection.ipynb
-├── eda_l3_insights.ipynb   <-- Coming up
-scripts/features/
-├── build_features_l0_stats.py
-├── build_features_l1_behavior.py
-├── build_features_l2_riskflags.py
-├── build_features_l3_metaai.py
-├── tag_xai_reasons_l3.py
-scripts/models/
-├── train_supervised_models.py
-scripts/mixers/
-├── fetch_mixer_recipients.py
-├── trace_mixer_recipient_txns.py
-scripts/gnn/
-├── build_graph_dataset.py
-├── prep_gnn_input.py
-├── train_gnn_model.py
+noir-framework/
+│
+├── datasource/
+│   ├── raw/              ← Raw fetched transaction data
+│   └── processed/         ← Cleaned and engineered feature datasets
+│
+├── scripts/
+│   ├── fetch/             ← Scripts for data acquisition
+│   ├── process/           ← Scripts for data merging and preprocessing
+│   ├── features/          ← Scripts for layered feature engineering (L0-L3)
+│   ├── models/            ← Scripts for supervised model training and SHAP analysis
+│   ├── gnn/               ← Scripts for GNN dataset preparation and training
+│   └── live/              ← Scripts for real-time inference service
+│
+├── notebooks/             ← Exploratory analysis and demonstration notebooks
+├── output/                ← Final predictions, visualizations, and reports
+├── docs/                  ← Project documentation (README, workflow guide, reports)
+├── requirements.txt
+└── .gitignore
 ```
 
 ## Key Findings
  
-- Fraud wallets exhibit distinct patterns in burst_tx_ratio, dormant awakenings, and high counterparty fraud counts.
-- Combined risk tag and anomaly flags correlate strongly with fraud label.
-- SHAP highlights `active_days`, `burst_tx_ratio`, and `failure_ratio` as influential.
-- Graph analysis reveals dense clustering among high-risk wallets.
-- GNN accuracy is currently limited; future improvements include larger training set and temporal edge encoding.
-- GNN model shows overfitting tendencies and class imbalance effects (e.g., fraud overrepresented in some runs)
-- Accuracy across models ranged from 58% to 71%; highest F1 for suspicious wallets (class 2)
-- Confusion matrices vary across runs due to random splits and small sample sizes
+- Fraudulent wallets exhibit distinct patterns in `burst_tx_ratio`, `dormant_awaken_count`, and `num_fraud_counterparties`.
+- `combined_risk_tag` and `anomaly_flag` correlate strongly with the fraud label.
+- SHAP analysis highlights `active_days`, `burst_tx_ratio`, and `failure_ratio` as influential features in supervised models.
+- Graph analysis reveals dense clustering among high-risk wallets, suggesting strong relational patterns in fraud propagation.
+- GNN accuracy is currently limited; future improvements are focused on larger training sets and temporal edge encoding.
+- GNN model shows tendencies towards overfitting and class imbalance effects (e.g., fraud overrepresented in some runs).
+- Accuracy across supervised models ranged from 58% to 71%; highest F1-score observed for suspicious wallets (class 2).
+- Confusion matrices exhibit variability across runs due to random data splits and the inherent challenges of small, imbalanced samples.
 
-## Next Steps
+## Future Work
  
-- Finalize explainability layer with rule-based tags (L3 XAI reason codes)
-- Expand GNN sample size and re-train with edge weights/time
-- Conduct ablation study for most influential features
-- Prepare thesis demo visuals and integrated pipeline summary
-- Refine GNN input sampling and edge construction (e.g., edge weights, temporal sorting)
-- Add interactive 3D visualization tools (Plotly/Altair) to explore embeddings
-- Finalize written evaluation report with interpretation of precision, recall, F1, and model tradeoffs
-- Cross-check class label integrity across preprocessing pipeline
+- Expand GNN sample size and re-train with edge weights/temporal features.
+- Conduct ablation study for most influential features to refine model inputs.
+- Add interactive 3D visualization tools (Plotly/Altair) to explore GNN embeddings and feature spaces.
+- Further refine GNN input sampling and edge construction methodologies.
+- Cross-check class label integrity across the entire preprocessing pipeline.
+- Explore DAO-integrated fraud reporting mechanisms (experimental).
