@@ -13,12 +13,10 @@ This report presents the evaluation of machine learning models developed for fra
   - Suspicious: 34 wallets
 
 - **Feature Layers**:
-  - **L0–L3 Aggregate**: Transaction counts, volumes, burst patterns, anomaly flags
-  - **Label Source**: Curated dataset from OFAC, Etherscan tags, and heuristic risk indicators
+  - **L0–L3 Aggregated Features**: Comprehensive features including transaction counts, volumes, behavioral patterns, and derived risk flags.
+  - **Label Source**: Curated from OFAC, Etherscan tags, and algorithmically derived risk indicators.
 
-- **Train-Test Split**:
-  - Stratified 80/20 split for supervised models
-  - GNN split handled after node filtering
+- **Train-Test Split**: A stratified 80/20 split is applied for supervised model training. GNN splits are handled post-node filtering to maintain graph integrity.
 
 ---
 
@@ -120,7 +118,8 @@ Actual  0  [10 0  0]
 ## 7. Output Artifacts
 
 - `output/models/predictions.csv`
-- `output/models/shap_rf_fraud_summary.png`
+- `output/models/shap_rf_summary.png`
+- `output/models/shap_rf_bar.png`
 - `output/gnn/gnn_data.pt`
-- `output/gnn/gnn_model_results.txt`
-- `output/gnn/tsne_embeddings_3d.html`
+- `output/gnn/gnn_predictions.csv`
+- `output/flagged_transactions.csv`
